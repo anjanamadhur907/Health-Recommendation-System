@@ -19,7 +19,9 @@ app.use("/symptom", symptomRouter);
 app.use("/disease", diseaseRouter);
 app.use("/remedies", remediesRouter);
 app.use("/userSymptoms", userSymptoms);
-
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
 app.listen(3000, ()=>{
     console.log("Server started...")
 });
