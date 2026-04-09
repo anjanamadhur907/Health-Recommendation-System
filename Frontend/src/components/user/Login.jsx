@@ -2,10 +2,12 @@ import { useState } from "react";
 import axios from "axios";
 import API from "../API/API";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeDropper, FaEyeSlash } from "react-icons/fa";
 
 function Login({ close, goToRegister, setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -87,16 +89,25 @@ function Login({ close, goToRegister, setUser }) {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Password</label>
-                    <input 
-                        type="password" 
-                        placeholder="Enter your password" 
-                        className={`form-input ${errors.password ? 'input-error' : ''}`}
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setErrors({ ...errors, password: "", form: "" });
-                        }}
-                    />
+                    <div className="password-input-wrapper">
+                        <input 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="Enter your password" 
+                            className={`form-input ${errors.password ? 'input-error' : ''}`}
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrors({ ...errors, password: "", form: "" });
+                            }}
+                        />
+                        <button
+                            type="button"
+                            className="password-toggle-btn"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <FaEye color="white"/> : <FaEyeSlash color="white"/>}
+                        </button>
+                    </div>
                     {errors.password && <span className="error-text">{errors.password}</span>}
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>

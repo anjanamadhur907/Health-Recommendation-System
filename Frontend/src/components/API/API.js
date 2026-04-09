@@ -1,4 +1,4 @@
-const BASE_URL = "https://your-backend-url.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 const API = {
     LOGIN: `${BASE_URL}/user/login`,

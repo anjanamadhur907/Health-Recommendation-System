@@ -10,7 +10,11 @@ import cors from "cors"
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: ["http://localhost:5173", "https://your-frontend.onrender.com"],
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
