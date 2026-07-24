@@ -1,7 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./components/user/Login";
-import Register from "./components/user/Register";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Prediction from "./pages/Prediction";

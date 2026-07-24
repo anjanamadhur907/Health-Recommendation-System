@@ -67,6 +67,7 @@ function Home() {
                         <Register
                             close={() => setActiveModal(null)}
                             goToLogin={() => setActiveModal("login")}
+                            setUser={setUser}
                         />
                     </div>
                 </div>

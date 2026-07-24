@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import API from "../API/API";
 import { toast } from "react-toastify";
-import { FaEye, FaEyeDropper, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login({ close, goToRegister, setUser }) {
     const [email, setEmail] = useState("");
@@ -16,14 +16,14 @@ function Login({ close, goToRegister, setUser }) {
         
         if (!email.trim()) {
             newErrors.email = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
             newErrors.email = "Please enter a valid email";
         }
         
         if (!password.trim()) {
             newErrors.password = "Password is required";
-        } else if (password.length < 4) {
-            newErrors.password = "Password must be at least 4 characters";
+        } else if (password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
         }
         
         setErrors(newErrors);
@@ -40,7 +40,10 @@ function Login({ close, goToRegister, setUser }) {
         setLoading(true);
 
         try {
-            let response = await axios.post(API.LOGIN, { email, password });
+            let response = await axios.post(API.LOGIN, {
+                email: email.trim().toLowerCase(),
+                password
+            });
 
             toast.success("Login successful!");
 
@@ -51,16 +54,19 @@ function Login({ close, goToRegister, setUser }) {
             close();
 
         } catch (error) {
-            if (error.response?.data?.error) {
-                setErrors({ form: error.response.data.error });
-                toast.error(error.response.data.error);
+            const serverErr = error.response?.data?.error;
+            let errMsg = "Login failed. Please try again.";
+            
+            if (Array.isArray(serverErr)) {
+                errMsg = serverErr.map(e => e.msg).join(", ");
+            } else if (typeof serverErr === "string") {
+                errMsg = serverErr;
             } else if (error.response?.status === 401) {
-                setErrors({ form: "Invalid email or password" });
-                toast.error("Invalid email or password");
-            } else {
-                setErrors({ form: "Login failed. Please try again." });
-                toast.error("Login failed. Please try again.");
+                errMsg = "Invalid email or password";
             }
+
+            setErrors({ form: errMsg });
+            toast.error(errMsg);
         } finally {
             setLoading(false);
         }
@@ -114,7 +120,7 @@ function Login({ close, goToRegister, setUser }) {
                     {loading ? "Logging in..." : "Login"}
                 </button>
                 <p className="switch-text">
-                    Don't have an account?
+                    Don't have an account?{" "}
                     <a href="#" onClick={(e) => { e.preventDefault(); goToRegister(); }}>
                         Register
                     </a>

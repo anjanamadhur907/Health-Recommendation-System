@@ -2,8 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import API from "../API/API";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-function Register({ close, goToLogin }) {
+function Register({ close, goToLogin, setUser }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,23 +18,23 @@ function Register({ close, goToLogin }) {
         
         if (!name.trim()) {
             newErrors.name = "Name is required";
-        } else if (name.length < 2) {
+        } else if (name.trim().length < 2) {
             newErrors.name = "Name must be at least 2 characters";
         }
         
         if (!email.trim()) {
             newErrors.email = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
             newErrors.email = "Please enter a valid email";
         }
         
         if (!password.trim()) {
             newErrors.password = "Password is required";
-        } else if (password.length < 4) {
-            newErrors.password = "Password must be at least 4 characters";
+        } else if (password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
         }
         
-        if (!age.trim()) {
+        if (!String(age).trim()) {
             newErrors.age = "Age is required";
         } else if (isNaN(age) || parseInt(age) < 1 || parseInt(age) > 150) {
             newErrors.age = "Please enter a valid age";
@@ -53,24 +54,36 @@ function Register({ close, goToLogin }) {
         setLoading(true);
 
         try {
-            await axios.post(API.REGISTER, {
-                name,
-                email,
+            const res = await axios.post(API.REGISTER, {
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
                 password,
                 age: parseInt(age)
             });
 
-            toast.success("Registration successful! Please login.");
-            goToLogin();
+            toast.success("Registration successful!");
+            
+            if (res.data.token && res.data.user && setUser) {
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("user", JSON.stringify(res.data.user));
+                setUser(res.data.user);
+                close();
+            } else {
+                goToLogin();
+            }
 
         } catch (err) {
-            if (err.response?.data?.error) {
-                setErrors({ form: err.response.data.error });
-                toast.error(err.response.data.error);
-            } else {
-                setErrors({ form: "Registration failed. Please try again." });
-                toast.error("Registration failed. Please try again.");
+            const serverErr = err.response?.data?.error;
+            let errMsg = "Registration failed. Please try again.";
+
+            if (Array.isArray(serverErr)) {
+                errMsg = serverErr.map(e => e.msg).join(", ");
+            } else if (typeof serverErr === "string") {
+                errMsg = serverErr;
             }
+
+            setErrors({ form: errMsg });
+            toast.error(errMsg);
         } finally {
             setLoading(false);
         }
@@ -116,7 +129,7 @@ function Register({ close, goToLogin }) {
                     <div className="password-input-wrapper">
                         <input 
                             type={showPassword ? "text" : "password"} 
-                            placeholder="Create a password" 
+                            placeholder="Create a password (min 6 characters)" 
                             className={`form-input ${errors.password ? 'input-error' : ''}`}
                             value={password}
                             onChange={(e) => {
@@ -129,7 +142,7 @@ function Register({ close, goToLogin }) {
                             className="password-toggle-btn"
                             onClick={() => setShowPassword(!showPassword)}
                         >
-                            {showPassword ? "👁️" : "👁️‍🗨️"}
+                            {showPassword ? <FaEye color="white"/> : <FaEyeSlash color="white"/>}
                         </button>
                     </div>
                     {errors.password && <span className="error-text">{errors.password}</span>}
@@ -152,7 +165,7 @@ function Register({ close, goToLogin }) {
                     {loading ? "Creating account..." : "Register"}
                 </button>
                 <p className="switch-text">
-                    Already have an account?
+                    Already have an account?{" "}
                     <a href="#" onClick={(e) => { e.preventDefault(); goToLogin(); }}>
                         Login
                     </a>
