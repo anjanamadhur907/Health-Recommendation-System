@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
 import userRouter from "./routes/user.routes.js";
@@ -7,6 +8,8 @@ import remediesRouter from "./routes/remedies.routes.js";
 import userSymptoms from "./routes/userSymptoms.routes.js";
 import "./model/association.js";
 import cors from "cors";
+
+dotenv.config();
 
 const app = express();
 
