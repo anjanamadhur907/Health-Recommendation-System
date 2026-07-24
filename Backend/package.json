@@ -8,6 +8,8 @@
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.20.0",
+    "pg": "^8.22.0",
+    "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.8"
   },
   "name": "health-recommendation-system",
@@ -15,6 +17,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "start": "node app.js",
+    "seed": "node seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

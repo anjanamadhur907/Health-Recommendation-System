@@ -6,10 +6,10 @@ import { auth } from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/",
-  body("name").notEmpty(),
-  body("email").isEmail(),
-  body("password").isLength({ min: 6 }),
-  body("age").notEmpty(),
+  body("name").trim().notEmpty().withMessage("Name is required"),
+  body("email").trim().isEmail().withMessage("Please enter a valid email address"),
+  body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  body("age").notEmpty().withMessage("Age is required"),
   save
 );
 

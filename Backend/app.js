@@ -6,26 +6,37 @@ import diseaseRouter from "./routes/disease.routes.js";
 import remediesRouter from "./routes/remedies.routes.js";
 import userSymptoms from "./routes/userSymptoms.routes.js";
 import "./model/association.js";
-import cors from "cors"
+import cors from "cors";
 
 const app = express();
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "https://health-recommendation-system-frontend.onrender.com";
+
 const corsOptions = {
-    origin: ["http://localhost:5173", "https://your-frontend.onrender.com"],
+    origin: (origin, callback) => {
+        if (!origin || origin === FRONTEND_URL) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/user", userRouter);
 app.use("/symptom", symptomRouter);
 app.use("/disease", diseaseRouter);
 app.use("/remedies", remediesRouter);
 app.use("/userSymptoms", userSymptoms);
+
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
-app.listen(3000, ()=>{
-    console.log("Server started...")
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}...`);
 });

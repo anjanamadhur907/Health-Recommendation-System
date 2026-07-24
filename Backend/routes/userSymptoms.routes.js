@@ -1,8 +1,9 @@
 import express from "express";
-import {addUserSymptoms} from "../controller/userSymptoms.controller.js";
+import { addUserSymptoms } from "../controller/userSymptoms.controller.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/",addUserSymptoms);
+router.post("/", auth, addUserSymptoms);
 
 export default router;

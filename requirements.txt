@@ -1,0 +1,65 @@
+====================================================================
+HEALTH RECOMMENDATION SYSTEM - PROJECT REQUIREMENTS & DEPENDENCIES
+====================================================================
+
+[SYSTEM REQUIREMENTS]
+- Node.js >= v18.0.0
+- npm >= v9.0.0
+- Database: Supabase PostgreSQL (or MySQL)
+
+--------------------------------------------------------------------
+[BACKEND DEPENDENCIES] (Backend/package.json)
+--------------------------------------------------------------------
+express==^5.2.1
+body-parser==^2.2.2
+cors==^2.8.6
+dotenv==^17.3.1
+express-validator==^7.3.1
+jsonwebtoken==^9.0.3
+bcryptjs==^3.0.3
+sequelize==^6.37.8
+pg==^8.22.0
+pg-hstore==^2.3.4
+mysql2==^3.20.0
+
+--------------------------------------------------------------------
+[FRONTEND DEPENDENCIES] (Frontend/package.json)
+--------------------------------------------------------------------
+react==^19.2.4
+react-dom==^19.2.4
+react-router-dom==^7.13.2
+axios==^1.13.6
+bootstrap==^5.3.8
+react-icons==^5.6.0
+react-toastify==^11.0.5
+lucide-react==^1.8.0
+vite==^8.0.1
+
+--------------------------------------------------------------------
+[ENVIRONMENT VARIABLES REQUIRED (.env in Backend/)]
+--------------------------------------------------------------------
+TOKEN_SECRET=your_jwt_secret_key
+
+# Supabase PostgreSQL Configuration:
+DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres.your_supabase_project_ref
+DB_PASSWORD=your_supabase_db_password
+
+# Or Full PostgreSQL Connection URL:
+# DATABASE_URL=postgresql://postgres.your_project_ref:your_password@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
+
+--------------------------------------------------------------------
+[QUICK START COMMANDS]
+--------------------------------------------------------------------
+1. Setup Backend:
+   cd Backend
+   npm install
+   node seed.js    # Seed initial disease and symptom data into PostgreSQL
+   node app.js     # Start backend server on port 3000
+
+2. Setup Frontend:
+   cd Frontend
+   npm install
+   npm run dev     # Start Vite dev server on port 5173
